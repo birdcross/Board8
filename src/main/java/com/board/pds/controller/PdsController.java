@@ -19,7 +19,7 @@ public class PdsController {
 	@Autowired
 	private MenuMapper menuMapper;
 	@Autowired
-	private PdsMapper pdsMapper;
+	private PdsService pdsService;
 	
 	// /pds/List?nowpage=1&menu_id=MENUI01
 	// 파라미터를 받은 VO가 없으므로 HashMap 이용해서 파하미터 처리
@@ -30,9 +30,10 @@ public class PdsController {
 		ModelAndView mv = new ModelAndView();
 		// 메뉴 목록
 		List<MenuVo>  menuList   =  menuMapper.getMenuList();
-		//List<PdsVo> pdsList = pdsMapper.getPsdList();
+		List<PdsVo> pdsList = pdsService.getPsdList();
 		mv.addObject("menuList", menuList);
-		//mv.addObject("pdsList", pdsList);
+		mv.addObject("map", map);
+		mv.addObject("pdsList", pdsList);
 		// 자료실 목록
 		
 		mv.setViewName("pds/list");
