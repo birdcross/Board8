@@ -18,7 +18,7 @@ CREATE   TABLE   TUSER (
    , INDATE      DATE          DEFAULT SYSDATE
 );
 
--- 멀티 게시판 - 구조변경
+-- 멀티 게시판(메뉴로 다중게시판구현) - 구조변경
 DROP    TABLE  BOARD;
 CREATE  TABLE  BOARD (
 	  BNO	       NUMBER(8,0)           PRIMARY  KEY
@@ -31,8 +31,8 @@ CREATE  TABLE  BOARD (
     , HIT	       NUMBER(9,0)           DEFAULT  0  
 );
 
---- 자료실 용 추가
 ---------------------------------------
+--- 자료실 용 추가
 --- 자료실을 위한 FIELS 테이블 생성
 ---------------------------------------
 CREATE  TABLE  FILES

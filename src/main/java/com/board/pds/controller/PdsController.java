@@ -33,9 +33,9 @@ public class PdsController {
 	@Autowired
 	private  PdsService     pdsService;
 	
-	//  /Pds/List?nowpage=1&menu_id=MENU01
 	// 파라미터를 받는 vo 가 없으므로 HashMap 이용해서 파라미터 처리
 	// hashmap 으로 인자처리할때는 @RequestParam 필수
+	// /Pds/List?nowpage=1&menu_id=MENU01
 	@RequestMapping("/List")
 	public   ModelAndView  list(
 		@RequestParam HashMap<String, Object> map
@@ -47,13 +47,15 @@ public class PdsController {
 		// 메뉴 목록
 		List<MenuVo>  menuList  =  menuMapper.getMenuList();
 		
-		// 자료실 목록
+		// pdsService - db (mapper) + 추가적인로직(비지니스)
+		// 자료실 목록 조회 : Board + Files
 		List<PdsVo>   pdsList   =  pdsService.getPdsList( map );
 		
-		ModelAndView mv = new ModelAndView();
+		ModelAndView  mv        =  new ModelAndView();
 		mv.addObject("menuList", menuList);    // 메뉴 목록
 		mv.addObject("pdsList",  pdsList);     // 자료실 목록 Board + Files
 		mv.addObject("map",      map);
+		//mv.addObject("nowpage",  map.get("nowpage"));
 		mv.setViewName("pds/list");   // pds/list.jsp
 		return mv;
 	}
@@ -100,11 +102,13 @@ public class PdsController {
 		ModelAndView  mv = new ModelAndView();
 		mv.addObject("menuList", menuList );
 		mv.addObject("map",      map );
+		
 		mv.setViewName("pds/write");
 		return mv;
 	}
 	
-	// /Pds/Write  - 자료실 저장 (글 + 파일들)
+	// /Pds/Write  - 자료실 저장 (map : 글(title, writer, content, ...)
+	//                          + upfile :  파일들)
 	@RequestMapping("/Write")
 	public  ModelAndView   write(
 		@RequestParam   HashMap<String, Object> map,  // 일반데이터	
@@ -113,21 +117,23 @@ public class PdsController {
 		    MultipartFile[]     uploadFiles     // 파일처리
 			) {
 		// 넘어온 정보
-		System.out.println("map:" + map); 
+		System.out.println("map:"   + map); 
+		System.out.println("files:" + uploadFiles); 
 				
 		// 저장
 		// 1. map정보
 		// 새글 저장 -> Board table 저장
-		
-		// 2. request 정보 활용
-		// 2-1. 업로드시 파일정보 저장 -> Files Table 저장
-		// 2-2. 실제 폴더에 파일저장   -> uploadPath (d:\data 폴더)
+		// 2. MultipartFile[] 정보 활용
+		// 2-1. 실제 폴더에 파일저장   -> uploadPath (d:\dev\data 폴더)
+		// 2-2. 저장된 파일정보를 db에 저장 -> Files Table 저장
 		pdsService.setWrite(map, uploadFiles);
-			
-		String  menu_id  =  "MENU01"; 
+		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("map", map);		
-		mv.setViewName("redirect:/Pds/List?menu_id=" + MENU_ID);
+		String loc = "redirect:/Pds/List";
+			   loc+= "?menu_id=" + map.get("menu_id");
+			   loc+= "&nowpage=" + map.get("nowpage");
+		mv.setViewName(loc);
 		return mv;
 	}
 	

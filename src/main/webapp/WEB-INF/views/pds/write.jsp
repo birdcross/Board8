@@ -42,8 +42,8 @@
   $( function() {
      let num = 1;
      $('#btnAddFile').on('click', function(e) {
-         let tag = '<input type="file" name="upfile' 
-         + num + '" class="upfile" multiple/><br>';
+         let tag = '<input type="file" name="upfile"'        
+           + ' class="upfile" multiple/><br>';
          $('#tdfile').append(tag);
          num++;
      })
@@ -56,11 +56,12 @@
 <body>
   <main>
     
-    <%@include file="/WEB-INF/include/pagingmenus.jsp" %>
+    <%@include file="/WEB-INF/include/pdsmenus.jsp" %>
   
 	<h2>자료실 글 등록</h2>
-	<form action="/Pds/Write" method="POST"
-	     enctype = "multipart/form-data">
+	<form action  = "/Pds/Write" 
+	      method="POST"
+	      enctype = "multipart/form-data"> <!-- 파일전송(binary) -->
 	<input type="hidden" name="menu_id" value="${ map.menu_id }" />
 	<input type="hidden" name="nowpage" value="${ map.nowpage }" />
 	<table>

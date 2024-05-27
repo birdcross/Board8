@@ -5,13 +5,14 @@
   <!-- 자료실 목록 조회  --> 
   <select id="getPdsList" >
   	 SELECT  BNO
-	     , TITLE
-	     , WRITER
-	     , ( SELECT  COUNT(*) 
-              FROM   FILES  F
-              WHERE  B.BNO = F.BNO ) FILESCOUNT
-	     , TO_CHAR(REGDATE, 'YYYY-MM-DD' )  REGDATE 
-	     , HIT
+	       , TITLE
+	       , WRITER
+	       -- 상관 서브 쿼리 (corelative subquery)
+	       , ( SELECT  COUNT(*) 
+               FROM   FILES  F
+               WHERE  B.BNO = F.BNO ) FILESCOUNT
+	       , TO_CHAR(REGDATE, 'YYYY-MM-DD' )  REGDATE 
+	       , HIT
        FROM   BOARD  B
        WHERE  MENU_ID = #{ menu_id  }
        ORDER  BY BNO DESC

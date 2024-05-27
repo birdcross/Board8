@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,14 +16,19 @@ import com.board.pds.service.PdsService;
 @Service
 public class PdsServiceImpl implements PdsService {
 
+	// 파일이 저장될 경로(uploadPath <- application.properties) 
+	@Value("${part4.upload-path}")
+	private  String  uploadPath;
+	
 	@Autowired
 	private  PdsMapper  pdsMapper;
 	
 	@Override
 	public List<PdsVo> getPdsList(HashMap<String, Object> map) {
+		// map { "menu_id" :"MENU01", "nowpage" : 1  } 
 		// db 조회 결과 돌려준다
 		List<PdsVo> pdsList = pdsMapper.getPdsList(map); 
-		System.out.println("pdsService pdsList:" + pdsList);
+		// System.out.println("pdsService pdsList:" + pdsList);
 		return      pdsList;
 	}
 
@@ -39,10 +45,30 @@ public class PdsServiceImpl implements PdsService {
 		System.out.println("fileList:" + fileList );
 		return        fileList;
 	}
-
+	// 자료실 글쓰기 저장	
 	@Override
-	public void setWrite(HashMap<String, Object> map, MultipartFile[] uploadFiles) {
-		// TODO Auto-generated method stub
+	public void setWrite(HashMap<String, Object> map, 
+			MultipartFile[] uploadFiles) {
+		
+		System.out.println( "1:" + map );
+		
+		// 파일 저장 +  자료실 글쓰기
+		// 1. 파일 저장
+		// uploadFiles [] 을  d:\dev\data		
+		map.put("uploadPath", uploadPath );
+		// PdsFile class - 파일처리 전담 클래스 생성
+		// - 파일처리 전담 클래스 생성
+		// 1. 파일저장
+		// 2. 저장된 파일정보 가져온다
+		PdsFile.save( map, uploadFiles);
+		
+		// map 이 중요한 역할
+		System.out.println( "2:" + map ); 
+		
+		
+		// 2. Board 
+		
+		// 3. 
 		
 	}
 

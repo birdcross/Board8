@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.board.pds.domain.FilesVo;
 import com.board.pds.domain.PdsVo;
 
+//  @Mapper : mybatis 와 연결하기위해 존재
 @Mapper
 public interface PdsMapper {
 
