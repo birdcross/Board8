@@ -45,31 +45,47 @@ public class PdsServiceImpl implements PdsService {
 		System.out.println("fileList:" + fileList );
 		return        fileList;
 	}
-	// 자료실 글쓰기 저장	
+	
+	// 자료실 글쓰기 저장
 	@Override
-	public void setWrite(HashMap<String, Object> map, 
-			MultipartFile[] uploadFiles) {
-		
-		System.out.println( "1:" + map );
-		
+	public void setWrite(
+			HashMap<String, Object> map, 
+			MultipartFile[]         uploadFiles ) {
+			
 		// 파일 저장 +  자료실 글쓰기
 		// 1. 파일 저장
 		// uploadFiles [] 을  d:\dev\data		
-		map.put("uploadPath", uploadPath );
-		// PdsFile class - 파일처리 전담 클래스 생성
-		// - 파일처리 전담 클래스 생성
-		// 1. 파일저장
-		// 2. 저장된 파일정보 가져온다
+		map.put("uploadPath", uploadPath );		
+		System.out.println( "1:" + map );
+		
+		// PdsFile class 
+		// - 파일처리 전담 클래스 생성(
+		// 1.파일저장 
+		// 2.저장된 파일정보 가져온다
+		// map 1:{menu_id=MENU01, nowpage=1, title=aa, writer=aa, 
+		// content=aaa, uploadPath=D:/dev/data/}
 		PdsFile.save( map, uploadFiles);
 		
 		// map 이 중요한 역할
 		System.out.println( "2:" + map ); 
+		// map 2:{menu_id=MENU01, nowpage=1, title=aa, writer=aa, 
+		// content=aaa, uploadPath=D:/dev/data/, fileList=}
 		
+		// db 저장---------------------
+		// 3. Board 에 글 저장
+		pdsMapper.setWrite( map );
 		
-		// 2. Board 
+		// 4. Files 에 저장된 파일정보를 저장
+		List<FilesVo>  fileList = (List<FilesVo>) map.get("fileList");
+		if( fileList.size() != 0 )
+			pdsMapper.setFileWrite( map );
 		
-		// 3. 
-		
+	}
+
+	@Override
+	public void setReadcountUpdate(HashMap<String, Object> map) {
+		// 조회수 증가
+		pdsMapper.setReadcountUpdate(map);
 	}
 
 }

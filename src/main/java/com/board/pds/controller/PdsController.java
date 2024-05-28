@@ -70,7 +70,7 @@ public class PdsController {
 		List<MenuVo>  menuList =  menuMapper.getMenuList();
 		
 		// 조회수 증가
-		
+		pdsService.setReadcountUpdate(map);
 		// 조회할 자료실의 게시물정보 : BoardVo -> PdsVo
 		PdsVo          pdsVo  =  pdsService.getPds( map );
 		
@@ -112,7 +112,7 @@ public class PdsController {
 	@RequestMapping("/Write")
 	public  ModelAndView   write(
 		@RequestParam   HashMap<String, Object> map,  // 일반데이터	
-		@RequestParam(value="upfile", required= false) 
+		@RequestParam(value="upfile", required = false) 
 		       //  required=false  입력하지 않을 수 있다
 		    MultipartFile[]     uploadFiles     // 파일처리
 			) {
@@ -122,18 +122,18 @@ public class PdsController {
 				
 		// 저장
 		// 1. map정보
-		// 새글 저장 -> Board table 저장
-		// 2. MultipartFile[] 정보 활용
-		// 2-1. 실제 폴더에 파일저장   -> uploadPath (d:\dev\data 폴더)
-		// 2-2. 저장된 파일정보를 db에 저장 -> Files Table 저장
+		// 새글 저장 -> Board table 저장		
+		// 2. MultipartFile [] 정보 활용
+		// 2-1. 실제 폴더에 파일저장        -> uploadPath (d:\dev\data 폴더)
+		// 2-2. 저장된파일정보를 db 에 저장 -> Files Table 저장
 		pdsService.setWrite(map, uploadFiles);
-		
+	    		
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("map", map);		
-		String loc = "redirect:/Pds/List";
-			   loc+= "?menu_id=" + map.get("menu_id");
-			   loc+= "&nowpage=" + map.get("nowpage");
-		mv.setViewName(loc);
+		mv.addObject("map", map);
+		String  loc  = "redirect:/Pds/List";
+		loc         += "?menu_id="  + map.get("menu_id");  
+		loc         += "&nowpage="  + map.get("nowpage") ;		
+		mv.setViewName( loc );
 		return mv;
 	}
 	

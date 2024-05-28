@@ -18,6 +18,12 @@ public interface PdsMapper {
 
 	List<FilesVo> getFileList(HashMap<String, Object> map);
 
+	void setWrite(HashMap<String, Object> map);
+
+	void setFileWrite(HashMap<String, Object> map);
+
+	void setReadcountUpdate(HashMap<String, Object> map);
+
 }
 
 

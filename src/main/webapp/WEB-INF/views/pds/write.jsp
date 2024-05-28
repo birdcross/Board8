@@ -46,10 +46,11 @@
            + ' class="upfile" multiple/><br>';
          $('#tdfile').append(tag);
          num++;
-     })
-  
+     })  
   } );
 
+  // html input type="file" name="upload" multiple />
+  // 여러파일을 선택하여 보낼수 있다 + ctrl이나 shift 여러개선택
 </script>
 
 </head>
