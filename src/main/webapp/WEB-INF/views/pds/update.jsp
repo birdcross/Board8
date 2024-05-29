@@ -52,13 +52,57 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/browser-scss@1.0.3/dist/browser-scss.min.js"></script>
 
+<script src="https://code.jquery.com/jquery.min.js"></script>
+<script>
+  $( function() {
+     let num = 1;
+     $('#btnAddFile').on('click', function(e) {
+         let tag = '<input type="file" name="upfile"'        
+           + ' class="upfile" multiple/><br>';
+         $('#tdfile').append(tag);
+         num++;
+     }) 
+     
+     // ❌ 가 클릭되면
+     $('.aDelete').on('click', function( e ) {
+         e.preventDefault();   // a tag 기본기능(이벤트를 무시) - href 로 이동하지 않는다
+         e.stopPropagation();  // 이벤트를 상위요소로 전달하지 않음
+         
+         let aDelete = this;
+         
+         $.ajax({
+            url    :  this.href,
+            method : 'GET'
+         })
+         .done( function( result  ) {
+            alert('삭제완료');
+            $(aDelete).parent().remove();  // 화면에서 항목 삭제
+         })
+         .fail( function(error) {
+             console.dir(error);
+             alert('오류발생:' + error )
+         });
+         
+     })
+     
+  } );
+
+  // html input type="file" name="upload" multiple />
+  // 여러파일을 선택하여 보낼수 있다 + ctrl이나 shift 여러개선택
+</script>
+
 </head>
 <body>
   <main>
     
     <%@include file="/WEB-INF/include/pdsmenus.jsp" %>
   
-	<h2>자료실 내용 조회</h2>
+	<h2>자료실 내용 수정</h2>
+	<form action  = "/Pds/Update" method="POST"
+	      enctype = "multipart/form-data" >
+	<input type="hidden" name="bno"     value="${ vo.bno }" />
+	<input type="hidden" name="menu_id" value="${ map.menu_id }" />
+	<input type="hidden" name="nowpage" value="${ map.nowpage }" />
 	<table id="table">
 	 <tr>
 	   <td>글번호</td>
@@ -74,46 +118,51 @@
 	 </tr>
 	 <tr>
 	   <td>제목</td>
-	   <td colspan="3">${ vo.title }</td>	
+	   <td colspan="3">
+	   <input type="text" name="title" value="${ vo.title }" />
+	   </td>	
 	 </tr>
 	 <tr>
 	   <td>내용</td>
-	   <td colspan="3">${ vo.content }</td>
+	   <td colspan="3">
+	   <textarea name="content">${ vo.content }</textarea>
+	   </td>
 	 </tr>
 	 <tr>
 	   <td>파일</td>
 	   <td colspan="3" id="tdfile">
-	   
+	   <div>	   
 	   <c:forEach  var="file" items="${ fileList }">
-	     <div class="text-start">	   
-	       <a href="/Pds/filedownload/${ file.file_num }">
+	     <div class="text-start">
+	       <a class = "aDelete"	       
+	          href  = "/deleteFile?file_num=${ file.file_num }">
+	            ❌
+	       </a>	   
+	       <a href  = "/Pds/filedownload/${ file.file_num }">
 	         ${ file.filename }
 	       </a>
 	     </div>
-	   </c:forEach>   
-	   
+	   </c:forEach>
+	   </div>
+	   <hr>
+	   <!-- 새 파일 추가 -->
+	   <input type="button" id="btnAddFile" value="파일추가(최대 100MB)" />
+	   <input type="file" name="upfile" class="upfile" />
 	   </td>
 	 </tr>
 	 	
 	 <tr>
 	   <td colspan="4">
-	    <a class = "btn btn-primary btn-sm" 
-	       href  = "/Pds/WriteForm?menu_id=${ vo.menu_id }&nowpage=${map.nowpage}">새 글쓰기</a>&nbsp;&nbsp;
-	    <a class = "btn btn-warning btn-sm" 
-	       href  = "/Pds/UpdateForm?bno=${ vo.bno }&menu_id=${ vo.menu_id }&nowpage=${map.nowpage}">수정</a>&nbsp;&nbsp;
-	    <a class = "btn btn-danger btn-sm" 
-	       href  = "/Pds/Delete?bno=${ vo.bno }&menu_id=${ vo.menu_id}&nowpage=${map.nowpage}">삭제</a>&nbsp;&nbsp;
-	    <a class = "btn btn-secondary btn-sm" 
+	    <input class = "btn btn-primary btn-sm" 
+	       type="submit" value="수정"  />	
+	    <a     class = "btn btn-secondary btn-sm" 
 	       href  = "/Pds/List?menu_id=${ vo.menu_id }&nowpage=${map.nowpage}">목록으로</a>&nbsp;&nbsp;
-	    <a class = "btn btn-info btn-sm" 
-	       href  = "javascript:history.back()">이전으로</a>&nbsp;&nbsp;
-	    <a class = "btn btn-success btn-sm" 
-	       href  = "/">Home</a>
+	
 	   </td>
 	 </tr>
 	
 	</table>	
-
+    </form>
 	
   </main>
   

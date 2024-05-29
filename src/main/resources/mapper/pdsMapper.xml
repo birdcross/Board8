@@ -33,7 +33,7 @@
   
   </select>
   
-  <select id="getFileList">:
+  <select id="getFileList">
   
    SELECT     FILE_NUM
 			  ,BNO
@@ -97,11 +97,66 @@
         )
      </foreach> 
   </insert>
+  
+  <!-- 조회수 증가  -->
   <update id="setReadcountUpdate">
-  	UPDATE BOARD
-  	SET HIT = HIT+1
-  	WHERE BNO = #{bno}
+  
+    UPDATE  BOARD
+     SET    HIT = HIT + 1
+     WHERE  BNO = #{ bno  }     
+  
   </update>
+  
+  <!-- 파라미터 file_num 는 오류발생 : arg0, param1 -->
+  <select id="getFileInfo">
+  
+    SELECT    FILE_NUM
+            , BNO
+            , FILENAME
+            , FILEEXT
+            , SFILENAME            
+     FROM   FILES
+     WHERE  FILE_NUM = #{ arg0 }
+  
+  </select>
+ 
+  <!-- Files table 삭제 : bno 로 여러개 --> 
+  <delete  id="deleteUploadFile">
+  
+    DELETE  
+     FROM   FILES
+     WHERE  BNO = #{ bno } 
+  
+  </delete>
+  
+  <!-- Files table 삭제 : file_num 로 한 개 --> 
+  <delete  id="deleteUploadFileNum">
+  
+    DELETE  
+     FROM   FILES
+     WHERE  FILE_NUM = #{ file_num } 
+  
+  </delete>
+  
+  <!-- Board table 삭제 : bno -->
+  <delete  id="setDelete">
+  
+     DELETE
+      FROM   BOARD
+      WHERE  BNO = #{ bno }
+  
+  </delete>
+  
+  <!-- Board 정보 수정 -->
+  <update  id="setUpdate">
+  
+     UPDATE  BOARD
+      SET    TITLE    =  #{ title    } 
+            ,CONTENT  =  #{ content  }  
+      WHERE  BNO = #{ bno }
+  
+  </update>
+  
 </mapper>
 
 

@@ -38,9 +38,12 @@ public class PdsFile {
 	    	//System.out.println( "originalName:" + originalName );
 	    	// c:\donwload\data\data.abc.txt
 	    	String  fileName     =  
+	    		(originalName.lastIndexOf("\\") < 0 )  ?
+	    				originalName :
 	    		originalName.substring( originalName.lastIndexOf("\\") + 1 ); // data.abc.txt
 	    	String  fileExt      = 
-	    		originalName.substring( originalName.lastIndexOf(".") ); // .txt
+	    		(originalName.lastIndexOf(".") < 0 )  ?
+	    			""  : originalName.substring( originalName.lastIndexOf(".") ); // .txt
 	    	
 	    	// d:\dev\data\2024\05\27
 	    	// 날짜 폴더 생성 
@@ -73,6 +76,7 @@ public class PdsFile {
 	    	
 	    	// 저장된 파일들의 정보를 map 에 List 로 저장 -> pdsServiceImpl 에 사용
 	    	FilesVo  vo = new FilesVo(0, 0, fileName, fileExt, saveName2);
+	    	
 	    	fileList.add( vo );	    	
 	    	
 	    }  // end for
@@ -81,6 +85,7 @@ public class PdsFile {
 		   		
 	}  // save() end
 	
+	// 폴더 생성 : 날짜형식 폴더
 	private static  String  makeFolder( String uploadPath ) {
 		// uploadPath   folderPath 
 		// d:\dev\data  \2024\05\27
@@ -99,6 +104,23 @@ public class PdsFile {
 		}
 		
 		return  folderPath;
+	}
+
+	// 실제 물리파일 삭제
+	public static void delete(String uploadPath, List<FilesVo> fileList) {
+		
+		String  path  = uploadPath;  // d:/dev/data/
+		
+		fileList.forEach( ( file ) -> {
+			String  sfile   = file.getSfilename(); 
+			// 2024\05\27\e9bf6184-99cb-470a-ac3a-d81cfd91f9d1_2차프로젝트 명단.txt
+			File    dfile   = new File( path + sfile );
+			// System.out.println("삭제 경로:" + dfile.getAbsolutePath());
+			// D:\dev\data\2024\05\28\393cc3e1-a6aa-454d-b4bb-ffffcde1db98_github token.txt
+			if(dfile.exists()) 
+				dfile.delete();
+		});
+		
 	}
 
 }

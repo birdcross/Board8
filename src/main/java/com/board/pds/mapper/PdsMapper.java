@@ -24,6 +24,16 @@ public interface PdsMapper {
 
 	void setReadcountUpdate(HashMap<String, Object> map);
 
+	FilesVo getFileInfo(Long file_num);
+
+	void deleteUploadFile(HashMap<String, Object> map);
+	
+	void setDelete( HashMap<String, Object> map );
+
+	void setUpdate(HashMap<String, Object> map);
+
+	void deleteUploadFileNum(HashMap<String, Object> map);
+
 }
 
 
